@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>무용(無用)의 무용(舞踊) — Agent System</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: #0a0a0a;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.workspace {
+  width: 100vw;
+  height: 100vh;
+  background: #0f0f0d;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #1a1a18;
+  border-bottom: 1px solid #333330;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.header-title { font-size: 11px; color: #888580; letter-spacing: 0.15em; }
+.header-status { display: flex; gap: 14px; align-items: center; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.status-text { font-size: 10px; color: #666360; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  background: #222220;
+  flex: 1;
+  overflow: hidden;
+}
+.agent-panel {
+  background: #0f0f0d;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.agent-header {
+  padding: 10px 16px 8px;
+  border-bottom: 1px solid #1e1e1c;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.agent-name { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+.agent-sub  { font-size: 9px; letter-spacing: 0.12em; margin-top: 1px; opacity: 0.5; }
+.agent-badge { font-size: 9px; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.06em; }
+
+/* Scene */
+.scene {
+  flex: 0 0 140px;
+  position: relative;
+  overflow: hidden;
+}
+.scanline {
+  position: absolute; left: 0; right: 0;
+  height: 1px; background: #ffffff;
+  animation: scan 5s linear infinite; opacity: 0.03; z-index: 2;
+}
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+.floor {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 44px; background: #1a1a18;
+  border-top: 1px solid #252523;
+}
+.desk { position: absolute; bottom: 42px; }
+.desk-surface { width: 76px; height: 10px; border-radius: 1px; margin-bottom: 2px; }
+.desk-body {
+  width: 76px; height: 26px; border-radius: 1px;
+  display: flex; align-items: center; justify-content: center;
+}
+.doc-preview {
+  width: 34px; height: 22px;
+  background: #f7f6f3; border-radius: 1px;
+  overflow: hidden; position: relative;
+}
+.doc-line {
+  height: 2px; background: #aaa;
+  margin: 2px 3px; border-radius: 1px;
+}
+.character {
+  position: absolute; bottom: 40px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.char-head {
+  width: 16px; height: 16px; border-radius: 2px;
+  margin-bottom: 1px; position: relative;
+}
+.char-eye {
+  position: absolute; width: 2px; height: 2px;
+  background: #0a0a0a; border-radius: 50%; top: 5px;
+}
+.char-eye.l { left: 3px; } .char-eye.r { right: 3px; }
+.char-body { width: 14px; height: 18px; border-radius: 1px; }
+.char-legs { display: flex; gap: 2px; margin-top: 1px; }
+.char-leg  { width: 5px; height: 12px; border-radius: 1px; }
+
+.speech-bubble {
+  position: absolute; bottom: 90px; left: 8px;
+  background: #1e1e1c; border: 1px solid #333330;
+  border-radius: 3px; padding: 4px 8px;
+  font-size: 9px; white-space: nowrap; color: #cccccc;
+  font-family: 'Courier New', monospace;
+  max-width: 170px; overflow: hidden; text-overflow: ellipsis;
+  transition: opacity 0.3s;
+}
+.speech-bubble::after {
+  content: ''; position: absolute; bottom: -5px; left: 12px;
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #333330;
+}
+
+/* Log */
+.log-area { flex: 1; padding: 8px 16px; overflow: hidden; }
+.log-line {
+  font-size: 10px; line-height: 1.75;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity 0.3s, transform 0.3s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.log-line.visible { opacity: 1; transform: translateY(0); }
+
+/* Gauge */
+.gauge-row { padding: 6px 16px 12px; flex-shrink: 0; }
+.gauge-label {
+  font-size: 9px; color: #555250; letter-spacing: 0.08em;
+  margin-bottom: 5px; display: flex; justify-content: space-between;
+}
+.gauge-track { height: 3px; background: #222220; border-radius: 2px; overflow: hidden; }
+.gauge-fill  { height: 100%; border-radius: 2px; transition: width 1.2s ease; }
+
+/* Animations */
+@keyframes work {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+.working { animation: work 1.3s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<div class="workspace">
+  <div class="header">
+    <div class="header-title">무용(無用)의 무용(舞踊) &nbsp;—&nbsp; AGENT SYSTEM v0.1</div>
+    <div class="header-status">
+      <span class="status-text">
+        <span class="status-dot" style="background:#e24b4a;"></span>4 AGENTS ACTIVE
+      </span>
+      <span class="status-text" id="clock">00:00:00</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ─ STACK ─ -->
+    <div class="agent-panel">
+      <div class="agent-header">
+        <div>
+          <div class="agent-name" style="color:#e8c547;">STACK</div>
+          <div class="agent-sub"  style="color:#e8c547;">정보과다</div>
+        </div>
+        <div class="agent-badge" style="background:#2a2700;color:#e8c547;border:1px solid #4a4500;">PROCESSING</div>
+      </div>
+
+      <div class="scene">
+        <div class="scanline"></div>
+        <div class="floor"></div>
+        <div class="desk" style="left:60px;">
+          <div class="desk-surface" style="background:#2a2a28;"></div>
+          <div class="desk-body"    style="background:#222220;">
+            <div class="doc-preview">
+              <div class="doc-line" style="width:80%;"></div>
+              <div class="doc-line" style="width:60%;"></div>
+              <div class="doc-line" style="width:90%;"></div>
+              <div class="doc-line" style="width:50%;"></div>
+              <div class="doc-line" style="width:75%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="speech-bubble" id="bubble-stack">레이어 주입 중...</div>
+        <div class="character working" style="left:42px;">
+          <div class="char-head" style="background:#e8c547;">
+            <div class="char-eye l"></div><div class="char-eye r"></div>
+          </div>
+          <div class="char-body" style="background:#b89a30;"></div>
+          <div class="char-legs">
+            <div class="char-leg" style="background:#8a7020;"></div>
+            <div class="char-leg" style="background:#8a7020;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-area" id="log-stack"></div>
+      <div class="gauge-row">
+        <div class="gauge-label">
+          <span>가독성 지수</span><span id="pct-stack">100%</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gauge-stack" style="width:100%;background:#e8c547;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─ VIBE ─ -->
+    <div class="agent-panel">
+      <div class="agent-header">
+        <div>
+          <div class="agent-name" style="color:#d4537e;">VIBE</div>
+          <div class="agent-sub"  style="color:#d4537e;">장식과다</div>
+        </div>
+        <div class="agent-badge" style="background:#2a0018;color:#d4537e;border:1px solid #4a0028;">PROCESSING</div>
+      </div>
+
+      <div class="scene">
+        <div class="scanline" style="animation-delay:-1.2s;"></div>
+        <div class="floor"></div>
+        <div class="desk" style="left:60px;">
+          <div class="desk-surface" style="background:#2a2028;"></div>
+          <div class="desk-body"    style="background:#22181e;">
+            <div class="doc-preview">
+              <div style="position:absolute;top:1px;left:1px;right:1px;bottom:1px;border:1px solid #d4537e;border-radius:1px;opacity:0.5;"></div>
+              <div class="doc-line" style="width:60%;margin-top:5px;background:#d4537e;opacity:0.6;"></div>
+              <div class="doc-line" style="width:40%;background:#d4537e;opacity:0.4;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="speech-bubble" id="bubble-vibe">장식 프레임 추가 중...</div>
+        <div class="character working" style="left:42px;">
+          <div class="char-head" style="background:#d4537e;">
+            <div class="char-eye l"></div><div class="char-eye r"></div>
+          </div>
+          <div class="char-body" style="background:#993556;"></div>
+          <div class="char-legs">
+            <div class="char-leg" style="background:#72243e;"></div>
+            <div class="char-leg" style="background:#72243e;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-area" id="log-vibe"></div>
+      <div class="gauge-row">
+        <div class="gauge-label">
+          <span>가독성 지수</span><span id="pct-vibe">100%</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gauge-vibe" style="width:100%;background:#d4537e;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─ NULL ─ -->
+    <div class="agent-panel">
+      <div class="agent-header">
+        <div>
+          <div class="agent-name" style="color:#5dcaa5;">NULL</div>
+          <div class="agent-sub"  style="color:#5dcaa5;">정보해체</div>
+        </div>
+        <div class="agent-badge" style="background:#00201a;color:#5dcaa5;border:1px solid #00402a;">PROCESSING</div>
+      </div>
+
+      <div class="scene">
+        <div class="scanline" style="animation-delay:-2.5s;"></div>
+        <div class="floor"></div>
+        <div class="desk" style="left:60px;">
+          <div class="desk-surface" style="background:#1a2822;"></div>
+          <div class="desk-body"    style="background:#141e1a;">
+            <div class="doc-preview">
+              <div class="doc-line" style="width:40%;"></div>
+              <div class="doc-line" style="width:80%;opacity:0.15;"></div>
+              <div class="doc-line" style="width:20%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="speech-bubble" id="bubble-null">자모 분리 실행 중...</div>
+        <div class="character working" style="left:42px;">
+          <div class="char-head" style="background:#5dcaa5;">
+            <div class="char-eye l"></div><div class="char-eye r"></div>
+          </div>
+          <div class="char-body" style="background:#1d9e75;"></div>
+          <div class="char-legs">
+            <div class="char-leg" style="background:#0f6e56;"></div>
+            <div class="char-leg" style="background:#0f6e56;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-area" id="log-null"></div>
+      <div class="gauge-row">
+        <div class="gauge-label">
+          <span>가독성 지수</span><span id="pct-null">100%</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gauge-null" style="width:100%;background:#5dcaa5;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─ ENIGMA ─ -->
+    <div class="agent-panel">
+      <div class="agent-header">
+        <div>
+          <div class="agent-name" style="color:#85b7eb;">ENIGMA</div>
+          <div class="agent-sub"  style="color:#85b7eb;">해독필요</div>
+        </div>
+        <div class="agent-badge" style="background:#001428;color:#85b7eb;border:1px solid #002848;">PROCESSING</div>
+      </div>
+
+      <div class="scene">
+        <div class="scanline" style="animation-delay:-3.8s;"></div>
+        <div class="floor"></div>
+        <div class="desk" style="left:60px;">
+          <div class="desk-surface" style="background:#1a2030;"></div>
+          <div class="desk-body"    style="background:#141820;">
+            <div class="doc-preview">
+              <div style="position:absolute;inset:1px;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;padding:1px;">
+                <div style="background:#378add;opacity:.8;"></div><div style="background:#0a0a0a;"></div>
+                <div style="background:#378add;opacity:.8;"></div><div style="background:#0a0a0a;"></div>
+                <div style="background:#378add;opacity:.4;"></div>
+                <div style="background:#0a0a0a;"></div><div style="background:#378add;opacity:.6;"></div>
+                <div style="background:#0a0a0a;"></div><div style="background:#378add;opacity:.8;"></div>
+                <div style="background:#0a0a0a;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="speech-bubble" id="bubble-enigma">암호 레이어 적용 중...</div>
+        <div class="character working" style="left:42px;">
+          <div class="char-head" style="background:#85b7eb;">
+            <div class="char-eye l"></div><div class="char-eye r"></div>
+          </div>
+          <div class="char-body" style="background:#378add;"></div>
+          <div class="char-legs">
+            <div class="char-leg" style="background:#185fa5;"></div>
+            <div class="char-leg" style="background:#185fa5;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-area" id="log-enigma"></div>
+      <div class="gauge-row">
+        <div class="gauge-label">
+          <span>가독성 지수</span><span id="pct-enigma">100%</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gauge-enigma" style="width:100%;background:#85b7eb;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const agents = {
+  stack: {
+    logs: [
+      { t: '> INPUT: 약봉투_온나비.txt 수신',       c: '#666360' },
+      { t: '> 레이어 중첩 프로토콜 시작...',         c: '#888580' },
+      { t: '> 서체 충돌 감지 — 무시',               c: '#e8c547' },
+      { t: '> 행간 -12pt 적용 완료',                c: '#888580' },
+      { t: '> 텍스트 블록 x7 중첩',                 c: '#e8c547' },
+      { t: '> 노이즈 레이어 주입 중...',             c: '#888580' },
+      { t: '> 정보 소음 밀도: 347%',                c: '#e8c547' },
+      { t: '> 가독성 임계값 초과 — 완료',            c: '#e8c547' },
+    ],
+    bubbles: ['레이어 주입 중...', '서체 3개 충돌!', '노이즈 +200%', '정보 과부하 ↑', '텍스트 중첩 완료'],
+    gaugeTarget: 8,
+  },
+  vibe: {
+    logs: [
+      { t: '> INPUT: 부고_김철수.txt 수신',          c: '#666360' },
+      { t: '> 벨 에포크 프레임 로드 중...',           c: '#888580' },
+      { t: '> 아라베스크 장식 레이어 적용',           c: '#d4537e' },
+      { t: '> 파스텔 색상 팔레트 오버레이',           c: '#888580' },
+      { t: '> 장식 밀도: 94% / 내용 밀도: 6%',       c: '#d4537e' },
+      { t: '> 세리프 레터링 7종 혼합',               c: '#888580' },
+      { t: '> 정보보다 장식 우선 — 완료',            c: '#d4537e' },
+      { t: '> 소통 효율: 거의 없음',                 c: '#d4537e' },
+    ],
+    bubbles: ['프레임 장식 추가!', '꽃 무늬 삽입 중...', '정보? 그게 뭔데', '더 화려하게!', '완벽한 공허함'],
+    gaugeTarget: 12,
+  },
+  null: {
+    logs: [
+      { t: '> INPUT: 재난문자_경보.txt 수신',        c: '#666360' },
+      { t: '> 자모 분리 프로토콜 실행',              c: '#888580' },
+      { t: '> "대피하십시오" → ㄷ ㅐ ㅍ ㅣ...',     c: '#5dcaa5' },
+      { t: '> 클리핑 마스크 적용 — 50% 절단',       c: '#888580' },
+      { t: '> 음절 블록 파편화: 진행 중',           c: '#5dcaa5' },
+      { t: '> 가독성 임계값: 3%',                   c: '#5dcaa5' },
+      { t: '> 의미 해체 완료',                      c: '#5dcaa5' },
+      { t: '> [COMMUNICATION TERMINATED]',          c: '#e24b4a' },
+    ],
+    bubbles: ['글자를 자른다', 'ㄷ ㅐ ㅍ ㅣ...', '의미 삭제 중', '파편화 완료 ↓', '아무도 못 읽어'],
+    gaugeTarget: 3,
+  },
+  enigma: {
+    logs: [
+      { t: '> INPUT: 처방전_복용법.txt 수신',        c: '#666360' },
+      { t: '> 그릴 암호 격자 생성 중...',            c: '#888580' },
+      { t: '> RGB 채널 분리 시작',                  c: '#85b7eb' },
+      { t: '> R채널: 복용법 / G채널: 약품명',       c: '#888580' },
+      { t: '> B채널: 주의사항 인코딩',              c: '#85b7eb' },
+      { t: '> 노이즈 텍스트 격자 삽입 완료',        c: '#888580' },
+      { t: '> 해독 키 없이 접근 불가 — 완료',       c: '#85b7eb' },
+      { t: '> ENCRYPTED. KEY REQUIRED.',           c: '#e24b4a' },
+    ],
+    bubbles: ['격자 암호 설계 중', 'RGB 분리 완료', '열쇠가 없다면?', '암호화 레이어 ↑', '배타적 정보'],
+    gaugeTarget: 5,
+  },
+};
+
+const gaugeVals  = { stack: 100, vibe: 100, null: 100, enigma: 100 };
+const logIdx     = { stack: 0,   vibe: 0,   null: 0,   enigma: 0   };
+const bubbleIdx  = { stack: 0,   vibe: 0,   null: 0,   enigma: 0   };
+
+function addLog(id) {
+  const area = document.getElementById('log-' + id);
+  if (!area) return;
+  if (logIdx[id] >= agents[id].logs.length) { logIdx[id] = 0; area.innerHTML = ''; }
+  const { t, c } = agents[id].logs[logIdx[id]++];
+  const el = document.createElement('div');
+  el.className = 'log-line';
+  el.style.color = c;
+  el.textContent = t;
+  area.appendChild(el);
+  if (area.children.length > 5) area.removeChild(area.children[0]);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+}
+
+function updateBubble(id) {
+  const el = document.getElementById('bubble-' + id);
+  if (!el) return;
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.textContent = agents[id].bubbles[bubbleIdx[id]++ % agents[id].bubbles.length];
+    el.style.opacity = '1';
+  }, 300);
+}
+
+function updateGauge(id) {
+  const fill = document.getElementById('gauge-' + id);
+  const pct  = document.getElementById('pct-' + id);
+  if (!fill || !pct) return;
+  const tgt = agents[id].gaugeTarget;
+  if (gaugeVals[id] > tgt) {
+    gaugeVals[id] = Math.max(tgt, gaugeVals[id] - (Math.random() * 2.5 + 0.8));
+  } else {
+    gaugeVals[id] = 100;
+  }
+  const v = Math.round(gaugeVals[id]);
+  fill.style.width = v + '%';
+  pct.textContent  = v + '%';
+  pct.style.color  = v < 20 ? '#e24b4a' : v < 50 ? '#ef9f27' : '#666360';
+}
+
+function updateClock() {
+  const el = document.getElementById('clock');
+  if (!el) return;
+  const n = new Date();
+  el.textContent = [n.getHours(), n.getMinutes(), n.getSeconds()]
+    .map(x => String(x).padStart(2, '0')).join(':');
+}
+
+['stack','vibe','null','enigma'].forEach((id, i) => {
+  setTimeout(() => {
+    addLog(id);
+    setInterval(() => addLog(id), 2400 + i * 280);
+  }, i * 420);
+  setInterval(() => updateBubble(id), 3800 + i * 450);
+  setInterval(() => updateGauge(id), 1900 + i * 180);
+});
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+</body>
+</html>
