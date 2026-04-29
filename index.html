@@ -6,96 +6,90 @@
 <title>무용(無用)의 무용(舞踊) — Agent System</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  background: #0a0a0a;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+html, body { background: #f0ede8; width: 100%; height: 100%; overflow: hidden; }
+
 .workspace {
-  width: 100vw;
-  height: 100vh;
-  background: #0f0f0d;
+  width: 100vw; height: 100vh;
+  background: #f0ede8;
   font-family: 'Courier New', monospace;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
 }
+
+/* ── Header ── */
 .header {
-  background: #1a1a18;
-  border-bottom: 1px solid #333330;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: #e8e4de;
+  border-bottom: 1.5px solid #c8c4be;
+  padding: 9px 20px;
+  display: flex; align-items: center; justify-content: space-between;
   flex-shrink: 0;
 }
-.header-title { font-size: 11px; color: #888580; letter-spacing: 0.15em; }
+.header-title { font-size: 11px; color: #555250; letter-spacing: 0.15em; font-weight: 600; }
 .header-status { display: flex; gap: 14px; align-items: center; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; }
-.status-text { font-size: 10px; color: #666360; }
+.status-text { font-size: 10px; color: #888580; }
+
+/* ── Grid ── */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 1px;
-  background: #222220;
-  flex: 1;
-  overflow: hidden;
+  gap: 1.5px;
+  background: #c8c4be;
+  flex: 1; overflow: hidden;
 }
+
+/* ── Panel ── */
 .agent-panel {
-  background: #0f0f0d;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
+  background: #faf9f6;
+  display: flex; flex-direction: column;
+  overflow: hidden; position: relative;
 }
+
 .agent-header {
-  padding: 10px 16px 8px;
-  border-bottom: 1px solid #1e1e1c;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 9px 14px 7px;
+  border-bottom: 1px solid #e0ddd8;
+  display: flex; align-items: center; justify-content: space-between;
   flex-shrink: 0;
 }
 .agent-name { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
-.agent-sub  { font-size: 9px; letter-spacing: 0.12em; margin-top: 1px; opacity: 0.5; }
-.agent-badge { font-size: 9px; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.06em; }
+.agent-sub  { font-size: 9px; letter-spacing: 0.1em; margin-top: 1px; opacity: 0.6; }
+.agent-badge { font-size: 9px; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.05em; font-weight: 600; }
 
-/* Scene */
+/* ── Scene ── */
 .scene {
-  flex: 0 0 140px;
-  position: relative;
-  overflow: hidden;
+  flex: 0 0 145px;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid #e0ddd8;
 }
-.scanline {
-  position: absolute; left: 0; right: 0;
-  height: 1px; background: #ffffff;
-  animation: scan 5s linear infinite; opacity: 0.03; z-index: 2;
-}
-@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+/* STACK — 바닥 베이지 */
+.scene-stack  { background: #f5f0e8; }
+/* VIBE  — 연한 크림 */
+.scene-vibe   { background: #fdf8f0; }
+/* NULL  — 흰색에 가까운 */
+.scene-null   { background: #f8f8f6; }
+/* ENIGMA— 약간 차가운 흰 */
+.scene-enigma { background: #f4f6f8; }
+
 .floor {
   position: absolute; bottom: 0; left: 0; right: 0;
-  height: 44px; background: #1a1a18;
-  border-top: 1px solid #252523;
+  height: 38px;
 }
-.desk { position: absolute; bottom: 42px; }
-.desk-surface { width: 76px; height: 10px; border-radius: 1px; margin-bottom: 2px; }
-.desk-body {
-  width: 76px; height: 26px; border-radius: 1px;
-  display: flex; align-items: center; justify-content: center;
-}
-.doc-preview {
-  width: 34px; height: 22px;
-  background: #f7f6f3; border-radius: 1px;
-  overflow: hidden; position: relative;
-}
-.doc-line {
-  height: 2px; background: #aaa;
-  margin: 2px 3px; border-radius: 1px;
-}
+.floor-stack  { background: #ddd5c0; border-top: 2px solid #c8bea8; }
+.floor-vibe   { background: #e8d8c0; border-top: 2px solid #d4c0a0; }
+.floor-null   { background: #d8d8d8; border-top: 2px dashed #b8b8b8; }
+.floor-enigma { background: #d0d8e0; border-top: 2px solid #b8c4cc; }
+
+/* ── Furniture ── */
+.desk { position: absolute; bottom: 36px; }
+.desk-surface { height: 9px; border-radius: 1px; margin-bottom: 1px; }
+.desk-body    { height: 24px; border-radius: 1px; display: flex; align-items: center; justify-content: center; gap: 2px; }
+
+/* ── Character ── */
 .character {
-  position: absolute; bottom: 40px;
+  position: absolute; bottom: 34px;
   display: flex; flex-direction: column; align-items: center;
+  transform-origin: bottom center;
 }
 .char-head {
   width: 16px; height: 16px; border-radius: 2px;
@@ -103,20 +97,140 @@ html, body {
 }
 .char-eye {
   position: absolute; width: 2px; height: 2px;
-  background: #0a0a0a; border-radius: 50%; top: 5px;
+  background: rgba(0,0,0,0.6); border-radius: 50%; top: 5px;
 }
 .char-eye.l { left: 3px; } .char-eye.r { right: 3px; }
-.char-body { width: 14px; height: 18px; border-radius: 1px; }
+.char-body { width: 14px; height: 17px; border-radius: 1px; }
 .char-legs { display: flex; gap: 2px; margin-top: 1px; }
-.char-leg  { width: 5px; height: 12px; border-radius: 1px; }
+.char-leg  { width: 5px; height: 11px; border-radius: 1px; }
+.char-arm-l, .char-arm-r {
+  position: absolute; width: 4px; height: 11px;
+  border-radius: 1px; top: 18px;
+}
+.char-arm-l { left: -5px; transform-origin: top center; }
+.char-arm-r { right: -5px; transform-origin: top center; }
+.char-body-wrap { position: relative; }
 
+/* ── Dance animations ── */
+
+/* STACK: 바쁘게 좌우+위아래 많이 움직임 */
+@keyframes stack-dance {
+  0%   { transform: translateX(0)    translateY(0)    rotate(0deg); }
+  10%  { transform: translateX(-5px) translateY(-4px) rotate(-3deg); }
+  20%  { transform: translateX(6px)  translateY(-2px) rotate(4deg); }
+  30%  { transform: translateX(-4px) translateY(-6px) rotate(-5deg); }
+  40%  { transform: translateX(7px)  translateY(-1px) rotate(3deg); }
+  50%  { transform: translateX(-6px) translateY(-5px) rotate(-4deg); }
+  60%  { transform: translateX(5px)  translateY(-3px) rotate(5deg); }
+  70%  { transform: translateX(-3px) translateY(-7px) rotate(-3deg); }
+  80%  { transform: translateX(6px)  translateY(-2px) rotate(4deg); }
+  90%  { transform: translateX(-5px) translateY(-4px) rotate(-2deg); }
+  100% { transform: translateX(0)    translateY(0)    rotate(0deg); }
+}
+@keyframes stack-arm-l {
+  0%,100% { transform: rotate(-20deg); }
+  25%     { transform: rotate(40deg); }
+  50%     { transform: rotate(-30deg); }
+  75%     { transform: rotate(50deg); }
+}
+@keyframes stack-arm-r {
+  0%,100% { transform: rotate(20deg); }
+  25%     { transform: rotate(-40deg); }
+  50%     { transform: rotate(30deg); }
+  75%     { transform: rotate(-50deg); }
+}
+.dance-stack { animation: stack-dance 0.9s ease-in-out infinite; }
+.arm-stack-l { animation: stack-arm-l 0.9s ease-in-out infinite; }
+.arm-stack-r { animation: stack-arm-r 0.9s ease-in-out infinite; }
+
+/* VIBE: 크게 우아하게 좌우 스웨이 */
+@keyframes vibe-dance {
+  0%   { transform: translateX(0)    translateY(0)  rotate(0deg)  scaleX(1); }
+  25%  { transform: translateX(-12px) translateY(-6px) rotate(-8deg) scaleX(0.95); }
+  50%  { transform: translateX(0)    translateY(-2px) rotate(0deg) scaleX(1.05); }
+  75%  { transform: translateX(12px) translateY(-6px) rotate(8deg)  scaleX(0.95); }
+  100% { transform: translateX(0)    translateY(0)  rotate(0deg)  scaleX(1); }
+}
+@keyframes vibe-arm-l {
+  0%,100% { transform: rotate(-60deg); }
+  50%     { transform: rotate(10deg); }
+}
+@keyframes vibe-arm-r {
+  0%,100% { transform: rotate(60deg); }
+  50%     { transform: rotate(-10deg); }
+}
+.dance-vibe { animation: vibe-dance 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+.arm-vibe-l { animation: vibe-arm-l 2s ease-in-out infinite; }
+.arm-vibe-r { animation: vibe-arm-r 2s ease-in-out infinite; }
+
+/* NULL: 엇박자 — 예상치 못한 타이밍으로 끊겨 움직임 */
+@keyframes null-dance {
+  0%   { transform: translateX(0)   translateY(0)    rotate(0deg); }
+  8%   { transform: translateX(8px) translateY(-3px) rotate(5deg); }
+  9%   { transform: translateX(8px) translateY(-3px) rotate(5deg); }
+  22%  { transform: translateX(8px) translateY(-3px) rotate(5deg); }
+  23%  { transform: translateX(-9px) translateY(-7px) rotate(-8deg); }
+  40%  { transform: translateX(-9px) translateY(-7px) rotate(-8deg); }
+  41%  { transform: translateX(4px) translateY(0px)  rotate(3deg); }
+  55%  { transform: translateX(4px) translateY(0px)  rotate(3deg); }
+  56%  { transform: translateX(-6px) translateY(-4px) rotate(-4deg); }
+  70%  { transform: translateX(-6px) translateY(-4px) rotate(-4deg); }
+  71%  { transform: translateX(10px) translateY(-2px) rotate(7deg); }
+  85%  { transform: translateX(10px) translateY(-2px) rotate(7deg); }
+  86%  { transform: translateX(0)   translateY(0)    rotate(0deg); }
+  100% { transform: translateX(0)   translateY(0)    rotate(0deg); }
+}
+@keyframes null-arm-l {
+  0%,8%  { transform: rotate(0deg); }
+  9%,21% { transform: rotate(-70deg); }
+  22%,55%{ transform: rotate(20deg); }
+  56%,85%{ transform: rotate(-40deg); }
+  86%,100%{ transform: rotate(0deg); }
+}
+@keyframes null-arm-r {
+  0%,22% { transform: rotate(0deg); }
+  23%,39%{ transform: rotate(80deg); }
+  40%,70%{ transform: rotate(-20deg); }
+  71%,100%{ transform: rotate(50deg); }
+}
+.dance-null { animation: null-dance 2.4s steps(1, end) infinite; }
+.arm-null-l { animation: null-arm-l 2.4s steps(1, end) infinite; }
+.arm-null-r { animation: null-arm-r 2.4s steps(1, end) infinite; }
+
+/* ENIGMA: 거만하게 — 천천히 고개 들고, 잠깐 크게 포즈 */
+@keyframes enigma-dance {
+  0%   { transform: translateY(0)    rotate(0deg)   scale(1); }
+  20%  { transform: translateY(-3px) rotate(-3deg)  scale(1.02); }
+  40%  { transform: translateY(-6px) rotate(3deg)   scale(1.04); }
+  55%  { transform: translateY(-6px) rotate(3deg)   scale(1.04); }
+  70%  { transform: translateY(-3px) rotate(-2deg)  scale(1.02); }
+  85%  { transform: translateY(0)    rotate(0deg)   scale(1); }
+  95%  { transform: translateY(0)    rotate(0deg)   scale(1); }
+  100% { transform: translateY(0)    rotate(0deg)   scale(1); }
+}
+@keyframes enigma-arm-l {
+  0%,30%  { transform: rotate(-10deg); }
+  40%,70% { transform: rotate(-80deg); }
+  80%,100%{ transform: rotate(-10deg); }
+}
+@keyframes enigma-arm-r {
+  0%,30%  { transform: rotate(10deg); }
+  40%,70% { transform: rotate(80deg); }
+  80%,100%{ transform: rotate(10deg); }
+}
+.dance-enigma { animation: enigma-dance 3.5s ease-in-out infinite; }
+.arm-enigma-l { animation: enigma-arm-l 3.5s ease-in-out infinite; }
+.arm-enigma-r { animation: enigma-arm-r 3.5s ease-in-out infinite; }
+
+/* ── Speech Bubble ── */
 .speech-bubble {
-  position: absolute; bottom: 90px; left: 8px;
-  background: #1e1e1c; border: 1px solid #333330;
-  border-radius: 3px; padding: 4px 8px;
-  font-size: 9px; white-space: nowrap; color: #cccccc;
-  font-family: 'Courier New', monospace;
-  max-width: 170px; overflow: hidden; text-overflow: ellipsis;
+  position: absolute; bottom: 88px; left: 6px;
+  background: white; border: 1.5px solid #c8c4be;
+  border-radius: 4px; padding: 4px 8px;
+  font-size: 9px; white-space: nowrap;
+  color: #333; font-family: 'Courier New', monospace;
+  max-width: 165px; overflow: hidden; text-overflow: ellipsis;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   transition: opacity 0.3s;
 }
 .speech-bubble::after {
@@ -124,243 +238,439 @@ html, body {
   width: 0; height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 5px solid #333330;
+  border-top: 5px solid #c8c4be;
 }
 
-/* Log */
-.log-area { flex: 1; padding: 8px 16px; overflow: hidden; }
+/* ── Decorative Room Elements ── */
+
+/* STACK 소품: 서류 더미들 */
+.stack-pile {
+  position: absolute;
+  display: flex; flex-direction: column-reverse; align-items: flex-start;
+}
+.stack-paper {
+  height: 3px; border-radius: 0.5px;
+  margin-bottom: 1px; opacity: 0.85;
+}
+
+/* VIBE 소품: 샹들리에, 꽃, 소파 */
+.chandelier {
+  position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+  text-align: center; font-size: 18px; line-height: 1;
+}
+.chandelier-chain {
+  width: 1.5px; height: 10px; background: #b8a070;
+  margin: 0 auto 0;
+}
+.sofa {
+  position: absolute; right: 8px; bottom: 37px;
+  width: 36px; height: 20px;
+  border-radius: 3px 3px 1px 1px;
+}
+.sofa-back {
+  width: 36px; height: 11px;
+  border-radius: 3px 3px 0 0;
+}
+.sofa-seat {
+  width: 36px; height: 9px;
+  border-radius: 0 0 2px 2px;
+}
+.flower { position: absolute; font-size: 12px; }
+
+/* NULL 소품: 분리된 가구들 */
+.null-chair {
+  position: absolute;
+  width: 14px; height: 14px;
+}
+.null-chair-seat { width: 14px; height: 6px; background: #bbb; border-radius: 1px; }
+.null-chair-back { width: 14px; height: 7px; background: #aaa; border-radius: 1px 1px 0 0; margin-bottom: 1px; }
+.null-chair-leg  { width: 2px; height: 6px; background: #999; display: inline-block; margin: 0 1px; }
+
+/* ENIGMA 소품: 퍼즐, 붉은 실 */
+.puzzle {
+  position: absolute;
+  display: grid; gap: 1px;
+}
+.puzzle-piece {
+  border-radius: 1px;
+  opacity: 0.8;
+}
+.red-string {
+  position: absolute;
+  border-top: 1.5px solid #c0392b;
+  transform-origin: left center;
+  opacity: 0.6;
+}
+.pin {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #c0392b;
+}
+
+/* ── Doc Preview ── */
+.doc-preview {
+  background: white; border-radius: 1px;
+  overflow: hidden; position: relative;
+  border: 0.5px solid #ddd;
+}
+.doc-line { height: 2px; background: #ccc; margin: 2px 3px; border-radius: 1px; }
+/* VIBE doc: centered lines */
+.doc-line-center {
+  height: 2px; background: #d4537e;
+  margin: 2px auto; border-radius: 1px; opacity: 0.7;
+}
+/* NULL doc: scattered */
+.null-doc-char {
+  position: absolute; font-size: 5px; color: #888;
+  font-family: 'Courier New', monospace;
+}
+/* ENIGMA doc: grid pattern */
+.enigma-cell { border-radius: 1px; }
+
+/* ── Log ── */
+.log-area { flex: 1; padding: 7px 14px; overflow: hidden; }
 .log-line {
   font-size: 10px; line-height: 1.75;
-  opacity: 0; transform: translateY(4px);
+  opacity: 0; transform: translateY(3px);
   transition: opacity 0.3s, transform 0.3s;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .log-line.visible { opacity: 1; transform: translateY(0); }
 
-/* Gauge */
-.gauge-row { padding: 6px 16px 12px; flex-shrink: 0; }
+/* ── Gauge ── */
+.gauge-row { padding: 5px 14px 10px; flex-shrink: 0; border-top: 1px solid #e8e4de; }
 .gauge-label {
-  font-size: 9px; color: #555250; letter-spacing: 0.08em;
-  margin-bottom: 5px; display: flex; justify-content: space-between;
+  font-size: 9px; color: #888580; letter-spacing: 0.07em;
+  margin-bottom: 4px; display: flex; justify-content: space-between;
 }
-.gauge-track { height: 3px; background: #222220; border-radius: 2px; overflow: hidden; }
+.gauge-track { height: 3px; background: #e0ddd8; border-radius: 2px; overflow: hidden; }
 .gauge-fill  { height: 100%; border-radius: 2px; transition: width 1.2s ease; }
-
-/* Animations */
-@keyframes work {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-3px); }
-}
-.working { animation: work 1.3s ease-in-out infinite; }
 </style>
 </head>
 <body>
-
 <div class="workspace">
+
+  <!-- Header -->
   <div class="header">
-    <div class="header-title">무용(無用)의 무용(舞踊) &nbsp;—&nbsp; AGENT SYSTEM v0.1</div>
+    <div class="header-title">무용(無用)의 무용(舞踊) &nbsp;—&nbsp; AGENT SYSTEM v0.2</div>
     <div class="header-status">
-      <span class="status-text">
-        <span class="status-dot" style="background:#e24b4a;"></span>4 AGENTS ACTIVE
-      </span>
+      <span class="status-text"><span class="status-dot" style="background:#e24b4a;"></span>4 AGENTS ACTIVE</span>
       <span class="status-text" id="clock">00:00:00</span>
     </div>
   </div>
 
   <div class="grid">
 
-    <!-- ─ STACK ─ -->
+    <!-- ══════════════ STACK ══════════════ -->
     <div class="agent-panel">
       <div class="agent-header">
         <div>
-          <div class="agent-name" style="color:#e8c547;">STACK</div>
-          <div class="agent-sub"  style="color:#e8c547;">정보과다</div>
+          <div class="agent-name" style="color:#b07820;">STACK</div>
+          <div class="agent-sub"  style="color:#b07820;">정보과다</div>
         </div>
-        <div class="agent-badge" style="background:#2a2700;color:#e8c547;border:1px solid #4a4500;">PROCESSING</div>
+        <div class="agent-badge" style="background:#fff8e8;color:#b07820;border:1px solid #e8c878;">PROCESSING</div>
       </div>
 
-      <div class="scene">
-        <div class="scanline"></div>
-        <div class="floor"></div>
-        <div class="desk" style="left:60px;">
-          <div class="desk-surface" style="background:#2a2a28;"></div>
-          <div class="desk-body"    style="background:#222220;">
-            <div class="doc-preview">
-              <div class="doc-line" style="width:80%;"></div>
-              <div class="doc-line" style="width:60%;"></div>
+      <div class="scene scene-stack">
+        <div class="floor floor-stack"></div>
+
+        <!-- 배경 서류 더미들 (여기저기 난잡하게) -->
+        <!-- 더미 1: 왼쪽 구석 -->
+        <div class="stack-pile" style="left:8px;bottom:36px;">
+          <div class="stack-paper" style="width:38px;background:#f5e8c0;transform:rotate(-4deg);"></div>
+          <div class="stack-paper" style="width:34px;background:#e8d8a8;transform:rotate(2deg);"></div>
+          <div class="stack-paper" style="width:40px;background:#f0e0b0;transform:rotate(-2deg);"></div>
+          <div class="stack-paper" style="width:36px;background:#ddd0a0;transform:rotate(5deg);"></div>
+          <div class="stack-paper" style="width:32px;background:#e8dab8;transform:rotate(-3deg);"></div>
+        </div>
+        <!-- 더미 2: 오른쪽 -->
+        <div class="stack-pile" style="right:10px;bottom:36px;">
+          <div class="stack-paper" style="width:30px;background:#d8c890;transform:rotate(6deg);"></div>
+          <div class="stack-paper" style="width:36px;background:#e8d8a8;transform:rotate(-3deg);"></div>
+          <div class="stack-paper" style="width:28px;background:#f0e0c0;transform:rotate(2deg);"></div>
+        </div>
+        <!-- 바닥에 흩어진 종이 -->
+        <div style="position:absolute;bottom:36px;left:22px;width:28px;height:3px;background:#e8d8b0;transform:rotate(-8deg);border-radius:1px;opacity:0.8;"></div>
+        <div style="position:absolute;bottom:37px;left:100px;width:22px;height:3px;background:#d8c898;transform:rotate(12deg);border-radius:1px;opacity:0.7;"></div>
+
+        <!-- 책상 (서류 잔뜩) -->
+        <div class="desk" style="left:52px;">
+          <div class="desk-surface" style="width:78px;background:#c8a870;"></div>
+          <div class="desk-body" style="width:78px;background:#b89860;gap:1px;padding:2px;">
+            <!-- 책들 옆에 쌓인 서류들 -->
+            <div style="width:8px;height:18px;background:#8b4513;border-radius:1px;"></div>
+            <div style="width:6px;height:15px;background:#a0522d;border-radius:1px;"></div>
+            <div class="doc-preview" style="width:28px;height:18px;">
               <div class="doc-line" style="width:90%;"></div>
-              <div class="doc-line" style="width:50%;"></div>
-              <div class="doc-line" style="width:75%;"></div>
+              <div class="doc-line" style="width:70%;"></div>
+              <div class="doc-line" style="width:85%;"></div>
+              <div class="doc-line" style="width:60%;"></div>
             </div>
+            <div style="width:7px;height:16px;background:#6b8e23;border-radius:1px;"></div>
           </div>
         </div>
-        <div class="speech-bubble" id="bubble-stack">레이어 주입 중...</div>
-        <div class="character working" style="left:42px;">
-          <div class="char-head" style="background:#e8c547;">
+
+        <!-- 캐릭터 (바쁘게 많이 움직임) -->
+        <div class="speech-bubble" id="bubble-stack" style="left:6px;">정보를 쌓는 중…</div>
+        <div class="character dance-stack" style="left:38px;">
+          <div class="char-head" style="background:#e8b840;">
             <div class="char-eye l"></div><div class="char-eye r"></div>
           </div>
-          <div class="char-body" style="background:#b89a30;"></div>
+          <div class="char-body-wrap">
+            <div class="char-arm-l arm-stack-l" style="background:#c8983a;"></div>
+            <div class="char-body" style="background:#c8983a;"></div>
+            <div class="char-arm-r arm-stack-r" style="background:#c8983a;"></div>
+          </div>
           <div class="char-legs">
-            <div class="char-leg" style="background:#8a7020;"></div>
-            <div class="char-leg" style="background:#8a7020;"></div>
+            <div class="char-leg" style="background:#a07828;"></div>
+            <div class="char-leg" style="background:#a07828;"></div>
           </div>
         </div>
       </div>
 
       <div class="log-area" id="log-stack"></div>
       <div class="gauge-row">
-        <div class="gauge-label">
-          <span>가독성 지수</span><span id="pct-stack">100%</span>
-        </div>
-        <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-stack" style="width:100%;background:#e8c547;"></div>
-        </div>
+        <div class="gauge-label"><span>가독성 지수</span><span id="pct-stack">100%</span></div>
+        <div class="gauge-track"><div class="gauge-fill" id="gauge-stack" style="width:100%;background:#e8b840;"></div></div>
       </div>
     </div>
 
-    <!-- ─ VIBE ─ -->
+    <!-- ══════════════ VIBE ══════════════ -->
     <div class="agent-panel">
       <div class="agent-header">
         <div>
-          <div class="agent-name" style="color:#d4537e;">VIBE</div>
-          <div class="agent-sub"  style="color:#d4537e;">장식과다</div>
+          <div class="agent-name" style="color:#a03060;">VIBE</div>
+          <div class="agent-sub"  style="color:#a03060;">장식과다</div>
         </div>
-        <div class="agent-badge" style="background:#2a0018;color:#d4537e;border:1px solid #4a0028;">PROCESSING</div>
+        <div class="agent-badge" style="background:#fff0f4;color:#a03060;border:1px solid #e898b8;">PROCESSING</div>
       </div>
 
-      <div class="scene">
-        <div class="scanline" style="animation-delay:-1.2s;"></div>
-        <div class="floor"></div>
-        <div class="desk" style="left:60px;">
-          <div class="desk-surface" style="background:#2a2028;"></div>
-          <div class="desk-body"    style="background:#22181e;">
-            <div class="doc-preview">
-              <div style="position:absolute;top:1px;left:1px;right:1px;bottom:1px;border:1px solid #d4537e;border-radius:1px;opacity:0.5;"></div>
-              <div class="doc-line" style="width:60%;margin-top:5px;background:#d4537e;opacity:0.6;"></div>
-              <div class="doc-line" style="width:40%;background:#d4537e;opacity:0.4;"></div>
+      <div class="scene scene-vibe">
+        <div class="floor floor-vibe"></div>
+
+        <!-- 샹들리에 -->
+        <div class="chandelier">
+          <div class="chandelier-chain"></div>
+          <div style="font-size:20px;">🕯️</div>
+        </div>
+
+        <!-- 소파 (오른쪽) -->
+        <div class="sofa" style="right:8px;bottom:37px;">
+          <div class="sofa-back"  style="background:#c87890;"></div>
+          <div class="sofa-seat"  style="background:#d898a8;"></div>
+        </div>
+
+        <!-- 꽃들 -->
+        <div class="flower" style="left:8px; bottom:56px;">🌸</div>
+        <div class="flower" style="left:18px;bottom:65px;">🌺</div>
+        <div class="flower" style="left:6px; bottom:74px;">🌷</div>
+        <div class="flower" style="right:50px;bottom:58px;">🌹</div>
+
+        <!-- 책상 -->
+        <div class="desk" style="left:50px;">
+          <div class="desk-surface" style="width:78px;background:#d4a870;"></div>
+          <div class="desk-body" style="width:78px;background:#c49060;justify-content:center;">
+            <!-- 가운데 정렬 문서 -->
+            <div class="doc-preview" style="width:34px;height:20px;">
+              <div style="height:2px;background:#d4537e;width:70%;margin:3px auto 0;border-radius:1px;opacity:0.7;"></div>
+              <div style="height:2px;background:#d4537e;width:50%;margin:2px auto;border-radius:1px;opacity:0.6;"></div>
+              <div style="height:2px;background:#d4537e;width:80%;margin:2px auto;border-radius:1px;opacity:0.5;"></div>
+              <div style="height:2px;background:#d4537e;width:40%;margin:2px auto;border-radius:1px;opacity:0.7;"></div>
             </div>
           </div>
         </div>
-        <div class="speech-bubble" id="bubble-vibe">장식 프레임 추가 중...</div>
-        <div class="character working" style="left:42px;">
-          <div class="char-head" style="background:#d4537e;">
+
+        <!-- 책상 위 꽃 -->
+        <div style="position:absolute;bottom:62px;left:54px;font-size:11px;">🌸🌺</div>
+
+        <!-- 캐릭터 (크게 우아하게) -->
+        <div class="speech-bubble" id="bubble-vibe">아름다운 게 최고야!</div>
+        <div class="character dance-vibe" style="left:36px;">
+          <div class="char-head" style="background:#e87098;">
             <div class="char-eye l"></div><div class="char-eye r"></div>
           </div>
-          <div class="char-body" style="background:#993556;"></div>
+          <div class="char-body-wrap">
+            <div class="char-arm-l arm-vibe-l" style="background:#c05070;"></div>
+            <div class="char-body" style="background:#c05070;"></div>
+            <div class="char-arm-r arm-vibe-r" style="background:#c05070;"></div>
+          </div>
           <div class="char-legs">
-            <div class="char-leg" style="background:#72243e;"></div>
-            <div class="char-leg" style="background:#72243e;"></div>
+            <div class="char-leg" style="background:#903858;"></div>
+            <div class="char-leg" style="background:#903858;"></div>
           </div>
         </div>
       </div>
 
       <div class="log-area" id="log-vibe"></div>
       <div class="gauge-row">
-        <div class="gauge-label">
-          <span>가독성 지수</span><span id="pct-vibe">100%</span>
-        </div>
-        <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-vibe" style="width:100%;background:#d4537e;"></div>
-        </div>
+        <div class="gauge-label"><span>가독성 지수</span><span id="pct-vibe">100%</span></div>
+        <div class="gauge-track"><div class="gauge-fill" id="gauge-vibe" style="width:100%;background:#e87098;"></div></div>
       </div>
     </div>
 
-    <!-- ─ NULL ─ -->
+    <!-- ══════════════ NULL ══════════════ -->
     <div class="agent-panel">
       <div class="agent-header">
         <div>
-          <div class="agent-name" style="color:#5dcaa5;">NULL</div>
-          <div class="agent-sub"  style="color:#5dcaa5;">정보해체</div>
+          <div class="agent-name" style="color:#1a7a5a;">NULL</div>
+          <div class="agent-sub"  style="color:#1a7a5a;">정보해체</div>
         </div>
-        <div class="agent-badge" style="background:#00201a;color:#5dcaa5;border:1px solid #00402a;">PROCESSING</div>
+        <div class="agent-badge" style="background:#f0faf6;color:#1a7a5a;border:1px solid #80d0b0;">PROCESSING</div>
       </div>
 
-      <div class="scene">
-        <div class="scanline" style="animation-delay:-2.5s;"></div>
-        <div class="floor"></div>
-        <div class="desk" style="left:60px;">
-          <div class="desk-surface" style="background:#1a2822;"></div>
-          <div class="desk-body"    style="background:#141e1a;">
-            <div class="doc-preview">
-              <div class="doc-line" style="width:40%;"></div>
-              <div class="doc-line" style="width:80%;opacity:0.15;"></div>
-              <div class="doc-line" style="width:20%;"></div>
+      <div class="scene scene-null">
+        <div class="floor floor-null"></div>
+
+        <!-- 분리된 가구들 (뜨문뜨문) -->
+        <!-- 의자 조각 1: 왼쪽 -->
+        <div style="position:absolute;left:7px;bottom:36px;">
+          <div style="width:14px;height:5px;background:#b0b0a8;border-radius:1px;"></div>
+          <div style="display:flex;gap:5px;margin-top:1px;">
+            <div style="width:3px;height:7px;background:#a0a098;border-radius:1px;"></div>
+            <div style="width:3px;height:7px;background:#a0a098;border-radius:1px;"></div>
+          </div>
+        </div>
+        <!-- 의자 등받이: 왼쪽에서 멀리 떨어진 곳 -->
+        <div style="position:absolute;left:28px;bottom:50px;">
+          <div style="width:14px;height:9px;background:#b8b8b0;border-radius:1px 1px 0 0;"></div>
+        </div>
+        <!-- 테이블 다리 하나만 -->
+        <div style="position:absolute;right:18px;bottom:36px;width:4px;height:18px;background:#a8a8a0;border-radius:1px;"></div>
+        <!-- 테이블 상판은 멀리 -->
+        <div style="position:absolute;right:32px;bottom:68px;width:28px;height:4px;background:#b0b0a8;border-radius:1px;transform:rotate(-6deg);"></div>
+
+        <!-- 책상 -->
+        <div class="desk" style="left:52px;">
+          <div class="desk-surface" style="width:72px;background:#b0b0a8;"></div>
+          <div class="desk-body" style="width:72px;background:#a0a098;padding:2px;">
+            <!-- 해체된 문서: 글자들이 흩어짐 -->
+            <div class="doc-preview" style="width:34px;height:20px;position:relative;">
+              <span class="null-doc-char" style="top:1px;left:2px;">내</span>
+              <span class="null-doc-char" style="top:8px;left:14px;">복</span>
+              <span class="null-doc-char" style="top:3px;right:2px;">약</span>
+              <span class="null-doc-char" style="bottom:1px;left:5px;">ㄱ</span>
+              <span class="null-doc-char" style="bottom:3px;right:4px;">ㅏ</span>
             </div>
           </div>
         </div>
-        <div class="speech-bubble" id="bubble-null">자모 분리 실행 중...</div>
-        <div class="character working" style="left:42px;">
-          <div class="char-head" style="background:#5dcaa5;">
+
+        <!-- 캐릭터 (엇박자) -->
+        <div class="speech-bubble" id="bubble-null" style="left:6px;">자모 분리 실행 중...</div>
+        <div class="character dance-null" style="left:38px;">
+          <div class="char-head" style="background:#50c090;">
             <div class="char-eye l"></div><div class="char-eye r"></div>
           </div>
-          <div class="char-body" style="background:#1d9e75;"></div>
+          <div class="char-body-wrap">
+            <div class="char-arm-l arm-null-l" style="background:#20a070;"></div>
+            <div class="char-body" style="background:#20a070;"></div>
+            <div class="char-arm-r arm-null-r" style="background:#20a070;"></div>
+          </div>
           <div class="char-legs">
-            <div class="char-leg" style="background:#0f6e56;"></div>
-            <div class="char-leg" style="background:#0f6e56;"></div>
+            <div class="char-leg" style="background:#107050;"></div>
+            <div class="char-leg" style="background:#107050;"></div>
           </div>
         </div>
       </div>
 
       <div class="log-area" id="log-null"></div>
       <div class="gauge-row">
-        <div class="gauge-label">
-          <span>가독성 지수</span><span id="pct-null">100%</span>
-        </div>
-        <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-null" style="width:100%;background:#5dcaa5;"></div>
-        </div>
+        <div class="gauge-label"><span>가독성 지수</span><span id="pct-null">100%</span></div>
+        <div class="gauge-track"><div class="gauge-fill" id="gauge-null" style="width:100%;background:#50c090;"></div></div>
       </div>
     </div>
 
-    <!-- ─ ENIGMA ─ -->
+    <!-- ══════════════ ENIGMA ══════════════ -->
     <div class="agent-panel">
       <div class="agent-header">
         <div>
-          <div class="agent-name" style="color:#85b7eb;">ENIGMA</div>
-          <div class="agent-sub"  style="color:#85b7eb;">해독필요</div>
+          <div class="agent-name" style="color:#2050a0;">ENIGMA</div>
+          <div class="agent-sub"  style="color:#2050a0;">해독필요</div>
         </div>
-        <div class="agent-badge" style="background:#001428;color:#85b7eb;border:1px solid #002848;">PROCESSING</div>
+        <div class="agent-badge" style="background:#f0f4ff;color:#2050a0;border:1px solid #90b0e0;">PROCESSING</div>
       </div>
 
-      <div class="scene">
-        <div class="scanline" style="animation-delay:-3.8s;"></div>
-        <div class="floor"></div>
-        <div class="desk" style="left:60px;">
-          <div class="desk-surface" style="background:#1a2030;"></div>
-          <div class="desk-body"    style="background:#141820;">
-            <div class="doc-preview">
-              <div style="position:absolute;inset:1px;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;padding:1px;">
-                <div style="background:#378add;opacity:.8;"></div><div style="background:#0a0a0a;"></div>
-                <div style="background:#378add;opacity:.8;"></div><div style="background:#0a0a0a;"></div>
-                <div style="background:#378add;opacity:.4;"></div>
-                <div style="background:#0a0a0a;"></div><div style="background:#378add;opacity:.6;"></div>
-                <div style="background:#0a0a0a;"></div><div style="background:#378add;opacity:.8;"></div>
-                <div style="background:#0a0a0a;"></div>
+      <div class="scene scene-enigma">
+        <div class="floor floor-enigma"></div>
+
+        <!-- 붉은 실 (형사 코르크보드 느낌) -->
+        <div class="red-string" style="top:20px;left:10px;width:60px;transform:rotate(8deg);"></div>
+        <div class="red-string" style="top:35px;left:30px;width:45px;transform:rotate(-5deg);"></div>
+        <div class="red-string" style="top:28px;left:50px;width:55px;transform:rotate(12deg);"></div>
+        <!-- 핀들 -->
+        <div class="pin" style="top:17px;left:8px;"></div>
+        <div class="pin" style="top:22px;left:68px;"></div>
+        <div class="pin" style="top:32px;left:28px;"></div>
+        <div class="pin" style="top:38px;left:74px;"></div>
+
+        <!-- 퍼즐 조각들 (바닥에) -->
+        <div class="puzzle" style="left:8px;bottom:44px;grid-template-columns:repeat(3,8px);grid-template-rows:repeat(2,8px);">
+          <div class="puzzle-piece" style="background:#8090b8;"></div>
+          <div class="puzzle-piece" style="background:transparent;"></div>
+          <div class="puzzle-piece" style="background:#8090b8;"></div>
+          <div class="puzzle-piece" style="background:#8090b8;"></div>
+          <div class="puzzle-piece" style="background:#8090b8;"></div>
+          <div class="puzzle-piece" style="background:transparent;"></div>
+        </div>
+        <!-- 떨어진 퍼즐 하나 -->
+        <div style="position:absolute;right:14px;bottom:44px;width:8px;height:8px;background:#8090b8;border-radius:1px;opacity:0.7;transform:rotate(15deg);"></div>
+
+        <!-- 벽의 메모들 (포스트잇 느낌) -->
+        <div style="position:absolute;top:8px;right:12px;width:20px;height:18px;background:#fffaaa;transform:rotate(-3deg);font-size:6px;color:#333;padding:2px;line-height:1.3;font-family:monospace;">??<br/>KEY</div>
+        <div style="position:absolute;top:28px;right:10px;width:18px;height:16px;background:#aaffcc;transform:rotate(4deg);font-size:5px;color:#333;padding:1px;line-height:1.3;font-family:monospace;">R:복<br/>G:약</div>
+
+        <!-- 책상 -->
+        <div class="desk" style="left:52px;">
+          <div class="desk-surface" style="width:74px;background:#8898b8;"></div>
+          <div class="desk-body" style="width:74px;background:#7888a8;padding:2px;">
+            <!-- 암호 격자 문서 -->
+            <div class="doc-preview" style="width:34px;height:20px;">
+              <div style="position:absolute;inset:1px;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(3,1fr);gap:1px;padding:1px;">
+                <div style="background:#5070b0;opacity:.9;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.7;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.9;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.8;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.6;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.9;border-radius:0.5px;"></div>
+                <div style="background:#5070b0;opacity:.5;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.8;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
+                <div style="background:#5070b0;opacity:.7;border-radius:0.5px;"></div>
+                <div style="background:#f0f4ff;"></div>
               </div>
             </div>
           </div>
         </div>
-        <div class="speech-bubble" id="bubble-enigma">암호 레이어 적용 중...</div>
-        <div class="character working" style="left:42px;">
-          <div class="char-head" style="background:#85b7eb;">
+
+        <!-- 캐릭터 (거만하게) -->
+        <div class="speech-bubble" id="bubble-enigma" style="left:6px;">암호 레이어 적용 중...</div>
+        <div class="character dance-enigma" style="left:38px;">
+          <div class="char-head" style="background:#7090d0;">
             <div class="char-eye l"></div><div class="char-eye r"></div>
           </div>
-          <div class="char-body" style="background:#378add;"></div>
+          <div class="char-body-wrap">
+            <div class="char-arm-l arm-enigma-l" style="background:#4870c0;"></div>
+            <div class="char-body" style="background:#4870c0;"></div>
+            <div class="char-arm-r arm-enigma-r" style="background:#4870c0;"></div>
+          </div>
           <div class="char-legs">
-            <div class="char-leg" style="background:#185fa5;"></div>
-            <div class="char-leg" style="background:#185fa5;"></div>
+            <div class="char-leg" style="background:#2850a0;"></div>
+            <div class="char-leg" style="background:#2850a0;"></div>
           </div>
         </div>
       </div>
 
       <div class="log-area" id="log-enigma"></div>
       <div class="gauge-row">
-        <div class="gauge-label">
-          <span>가독성 지수</span><span id="pct-enigma">100%</span>
-        </div>
-        <div class="gauge-track">
-          <div class="gauge-fill" id="gauge-enigma" style="width:100%;background:#85b7eb;"></div>
-        </div>
+        <div class="gauge-label"><span>가독성 지수</span><span id="pct-enigma">100%</span></div>
+        <div class="gauge-track"><div class="gauge-fill" id="gauge-enigma" style="width:100%;background:#7090d0;"></div></div>
       </div>
     </div>
 
@@ -371,65 +681,65 @@ html, body {
 const agents = {
   stack: {
     logs: [
-      { t: '> INPUT: 약봉투_온나비.txt 수신',       c: '#666360' },
-      { t: '> 레이어 중첩 프로토콜 시작...',         c: '#888580' },
-      { t: '> 서체 충돌 감지 — 무시',               c: '#e8c547' },
-      { t: '> 행간 -12pt 적용 완료',                c: '#888580' },
-      { t: '> 텍스트 블록 x7 중첩',                 c: '#e8c547' },
-      { t: '> 노이즈 레이어 주입 중...',             c: '#888580' },
-      { t: '> 정보 소음 밀도: 347%',                c: '#e8c547' },
-      { t: '> 가독성 임계값 초과 — 완료',            c: '#e8c547' },
+      { t: '> INPUT: 약봉투_온나비.txt 수신',    c: '#a09070' },
+      { t: '> 레이어 중첩 프로토콜 시작...',      c: '#808060' },
+      { t: '> 모든 게 다 중요해',                c: '#c09030' },
+      { t: '> 행간 -12pt 적용 완료',             c: '#808060' },
+      { t: '> 텍스트 블록 x7 중첩',              c: '#c09030' },
+      { t: '> 정보를 쌓는 중…',                  c: '#808060' },
+      { t: '> 정보 소음 밀도: 347%',             c: '#c09030' },
+      { t: '> 텍스트 중첩 완료',                 c: '#c09030' },
     ],
-    bubbles: ['레이어 주입 중...', '서체 3개 충돌!', '노이즈 +200%', '정보 과부하 ↑', '텍스트 중첩 완료'],
+    bubbles: ['정보를 쌓는 중…', '모든 게 다 중요해', '노이즈 +200%', '정보 과부하 ↑', '텍스트 중첩 완료'],
     gaugeTarget: 8,
   },
   vibe: {
     logs: [
-      { t: '> INPUT: 부고_김철수.txt 수신',          c: '#666360' },
-      { t: '> 벨 에포크 프레임 로드 중...',           c: '#888580' },
-      { t: '> 아라베스크 장식 레이어 적용',           c: '#d4537e' },
-      { t: '> 파스텔 색상 팔레트 오버레이',           c: '#888580' },
-      { t: '> 장식 밀도: 94% / 내용 밀도: 6%',       c: '#d4537e' },
-      { t: '> 세리프 레터링 7종 혼합',               c: '#888580' },
-      { t: '> 정보보다 장식 우선 — 완료',            c: '#d4537e' },
-      { t: '> 소통 효율: 거의 없음',                 c: '#d4537e' },
+      { t: '> INPUT: 부고_김철수.txt 수신',       c: '#a07080' },
+      { t: '> 벨 에포크 프레임 로드 중...',        c: '#908070' },
+      { t: '> 아름다운 게 최고야!',               c: '#c05070' },
+      { t: '> 파스텔 색상 팔레트 오버레이',        c: '#908070' },
+      { t: '> 가운데로 정렬하자',                 c: '#c05070' },
+      { t: '> 세리프 레터링 7종 혼합',            c: '#908070' },
+      { t: '> 장식 밀도: 94% / 내용 밀도: 6%',    c: '#c05070' },
+      { t: '> 소통 효율: 거의 없음',              c: '#c05070' },
     ],
-    bubbles: ['프레임 장식 추가!', '꽃 무늬 삽입 중...', '정보? 그게 뭔데', '더 화려하게!', '완벽한 공허함'],
+    bubbles: ['아름다운 게 최고야!', '꽃 무늬 삽입 중...', '가운데로 정렬하자', '더 화려하게!', '프레임 장식 추가!'],
     gaugeTarget: 12,
   },
   null: {
     logs: [
-      { t: '> INPUT: 재난문자_경보.txt 수신',        c: '#666360' },
-      { t: '> 자모 분리 프로토콜 실행',              c: '#888580' },
-      { t: '> "대피하십시오" → ㄷ ㅐ ㅍ ㅣ...',     c: '#5dcaa5' },
-      { t: '> 클리핑 마스크 적용 — 50% 절단',       c: '#888580' },
-      { t: '> 음절 블록 파편화: 진행 중',           c: '#5dcaa5' },
-      { t: '> 가독성 임계값: 3%',                   c: '#5dcaa5' },
-      { t: '> 의미 해체 완료',                      c: '#5dcaa5' },
-      { t: '> [COMMUNICATION TERMINATED]',          c: '#e24b4a' },
+      { t: '> INPUT: 재난문자_경보.txt 수신',     c: '#608070' },
+      { t: '> 자모 분리 프로토콜 실행',           c: '#507060' },
+      { t: '> "대피하십시오" → ㄷ ㅐ ㅍ ㅣ...',  c: '#40a070' },
+      { t: '> 클리핑 마스크 적용 — 50% 절단',    c: '#507060' },
+      { t: '> 글을 흩어지게 해',                 c: '#40a070' },
+      { t: '> 가독성 임계값: 3%',                c: '#40a070' },
+      { t: '> 의미 해체 완료',                   c: '#40a070' },
+      { t: '> [COMMUNICATION TERMINATED]',      c: '#c03030' },
     ],
-    bubbles: ['글자를 자른다', 'ㄷ ㅐ ㅍ ㅣ...', '의미 삭제 중', '파편화 완료 ↓', '아무도 못 읽어'],
+    bubbles: ['자모 분리 실행 중...', 'ㄷ ㅐ ㅍ ㅣ...', '글을 흩어지게 해', '파편화 완료 ↓', '의미 삭제 중'],
     gaugeTarget: 3,
   },
   enigma: {
     logs: [
-      { t: '> INPUT: 처방전_복용법.txt 수신',        c: '#666360' },
-      { t: '> 그릴 암호 격자 생성 중...',            c: '#888580' },
-      { t: '> RGB 채널 분리 시작',                  c: '#85b7eb' },
-      { t: '> R채널: 복용법 / G채널: 약품명',       c: '#888580' },
-      { t: '> B채널: 주의사항 인코딩',              c: '#85b7eb' },
-      { t: '> 노이즈 텍스트 격자 삽입 완료',        c: '#888580' },
-      { t: '> 해독 키 없이 접근 불가 — 완료',       c: '#85b7eb' },
-      { t: '> ENCRYPTED. KEY REQUIRED.',           c: '#e24b4a' },
+      { t: '> INPUT: 처방전_복용법.txt 수신',     c: '#607090' },
+      { t: '> 그릴 암호 격자 생성 중...',         c: '#506080' },
+      { t: '> 풀 수 있는 사람만 봐도 돼',         c: '#4080c0' },
+      { t: '> R채널: 복용법 / G채널: 약품명',     c: '#506080' },
+      { t: '> 도구를 쓰게하자',                  c: '#4080c0' },
+      { t: '> 노이즈 텍스트 격자 삽입 완료',      c: '#506080' },
+      { t: '> 해독 키 없이 접근 불가 — 완료',     c: '#4080c0' },
+      { t: '> ENCRYPTED. KEY REQUIRED.',        c: '#c03030' },
     ],
-    bubbles: ['격자 암호 설계 중', 'RGB 분리 완료', '열쇠가 없다면?', '암호화 레이어 ↑', '배타적 정보'],
+    bubbles: ['풀 수 있는 사람만 봐도 돼', 'RGB 분리 완료', '도구를 쓰게하자', '열쇠를 찾아라', '배타적 정보'],
     gaugeTarget: 5,
   },
 };
 
-const gaugeVals  = { stack: 100, vibe: 100, null: 100, enigma: 100 };
-const logIdx     = { stack: 0,   vibe: 0,   null: 0,   enigma: 0   };
-const bubbleIdx  = { stack: 0,   vibe: 0,   null: 0,   enigma: 0   };
+const gaugeVals = { stack:100, vibe:100, null:100, enigma:100 };
+const logIdx    = { stack:0,   vibe:0,   null:0,   enigma:0   };
+const bubbleIdx = { stack:0,   vibe:0,   null:0,   enigma:0   };
 
 function addLog(id) {
   const area = document.getElementById('log-' + id);
@@ -468,7 +778,7 @@ function updateGauge(id) {
   const v = Math.round(gaugeVals[id]);
   fill.style.width = v + '%';
   pct.textContent  = v + '%';
-  pct.style.color  = v < 20 ? '#e24b4a' : v < 50 ? '#ef9f27' : '#666360';
+  pct.style.color  = v < 20 ? '#c03030' : v < 50 ? '#c07020' : '#888580';
 }
 
 function updateClock() {
@@ -476,16 +786,16 @@ function updateClock() {
   if (!el) return;
   const n = new Date();
   el.textContent = [n.getHours(), n.getMinutes(), n.getSeconds()]
-    .map(x => String(x).padStart(2, '0')).join(':');
+    .map(x => String(x).padStart(2,'0')).join(':');
 }
 
 ['stack','vibe','null','enigma'].forEach((id, i) => {
   setTimeout(() => {
     addLog(id);
-    setInterval(() => addLog(id), 2400 + i * 280);
-  }, i * 420);
-  setInterval(() => updateBubble(id), 3800 + i * 450);
-  setInterval(() => updateGauge(id), 1900 + i * 180);
+    setInterval(() => addLog(id), 2400 + i * 300);
+  }, i * 450);
+  setInterval(() => updateBubble(id), 3800 + i * 500);
+  setInterval(() => updateGauge(id), 1900 + i * 200);
 });
 
 setInterval(updateClock, 1000);
